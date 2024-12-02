@@ -32,6 +32,8 @@ model User {
   type            UserType
   posts           Post[]
   appointments    Appointment[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 
   @@map("users")
 }
@@ -44,6 +46,8 @@ model Appointment {
   description     String
   limit           Int
   date            DateTime
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 
   @@map("appointments")
 }
@@ -55,6 +59,8 @@ model Post {
   message         String
   imgUrl          String
   tags            String[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 
   @@map("posts")
 }
