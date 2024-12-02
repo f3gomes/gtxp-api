@@ -1,7 +1,7 @@
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
 
-export const app: Application = express();
+const app: Application = express();
 
 const PORT = process.env.PORT || 9000;
 
@@ -17,3 +17,5 @@ app.get("/", (_req: Request, res: Response) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+export default app;
