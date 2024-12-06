@@ -2,6 +2,33 @@ import { Request, Response } from "express";
 import { User } from "@prisma/client";
 import userService from "../services/user.service";
 
+const login = async (req: Request, res: Response): Promise<any> => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await userService.findUserByEmail(email);
+
+    if (!user) {
+      return res.status(401).json({ message: "Usuário não encontrado" });
+    }
+
+    const isPasswordMatch = await userService.comparePasswords(
+      password,
+      user.password
+    );
+
+    if (!isPasswordMatch) {
+      return res.status(401).json({ message: "Senha incorreta" });
+    }
+
+    const token = await userService.generateToken(user);
+    res.json({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
+};
+
 const postUser = async (req: Request, res: Response): Promise<User | any> => {
   try {
     const user = await userService.createUser(req.body);
@@ -30,4 +57,5 @@ const getUsers = async (req: Request, res: Response): Promise<User[] | any> => {
 export default {
   postUser,
   getUsers,
+  login,
 };
