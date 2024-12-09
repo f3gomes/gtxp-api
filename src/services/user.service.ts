@@ -28,7 +28,7 @@ const createUser = async (data: User): Promise<any> => {
   const updatedData = {
     ...data,
     password: hashedPassword,
-    pmiId: "CBGPL25" + startId,
+    congressId: "CBGPL25" + startId,
   };
 
   return prisma.user.create({ data: updatedData });
