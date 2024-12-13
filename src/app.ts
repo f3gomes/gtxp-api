@@ -1,5 +1,6 @@
 import cors from "cors";
 import { userRouter } from "./routes/user.route";
+import { appointmentRouter } from "./routes/appointment.route";
 import express, { Application, Request, Response } from "express";
 
 const app: Application = express();
@@ -20,5 +21,6 @@ app.listen(PORT, () => {
 });
 
 app.use("/api", userRouter);
+app.use("/api", appointmentRouter);
 
 export default app;

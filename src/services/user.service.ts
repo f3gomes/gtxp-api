@@ -6,17 +6,17 @@ import jwt from "jsonwebtoken";
 const prisma = new PrismaClient();
 const secret = process.env.JWT_SECRET_KEY!;
 
-async function findUserByEmail(email: string) {
+const findUserByEmail = async (email: string) => {
   return await prisma.user.findUnique({ where: { email } });
-}
+};
 
-async function comparePasswords(password: string, hashedPassword: string) {
+const comparePasswords = async (password: string, hashedPassword: string) => {
   return await bcrypt.compare(password, hashedPassword);
-}
+};
 
-async function generateToken(user: User) {
+const generateToken = (user: User) => {
   return jwt.sign({ userId: user.id }, secret, { expiresIn: "1d" });
-}
+};
 
 const createUser = async (data: User): Promise<any> => {
   const userLength = (await prisma.user.count()) + 1;
