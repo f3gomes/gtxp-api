@@ -24,6 +24,7 @@ model User {
   role            String
   company         String
   areas           String[]
+  description     String?
   linkedin        String
   instagram       String
   twitter         String
