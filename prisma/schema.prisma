@@ -33,6 +33,7 @@ model User {
   type            UserType
   posts           Post[]
   appointments    Appointment[]
+  verified        Boolean     @default(false)
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 
