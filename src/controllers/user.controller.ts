@@ -55,9 +55,12 @@ const postUser = async (req: Request, res: Response): Promise<User | any> => {
 
 const getUsers = async (req: Request, res: Response): Promise<User[] | any> => {
   try {
-    const usersList = await userService.getUsersList();
+    const usersList: any = await userService.getUsersList();
 
-    return res.status(200).json({ usersList });
+    const { users } = usersList;
+    const updatedList = users?.map(({ password, ...rest }: User) => rest);
+
+    return res.status(200).json({ updatedList });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
     console.log(error);
