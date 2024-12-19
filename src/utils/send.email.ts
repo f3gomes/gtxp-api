@@ -6,7 +6,7 @@ interface MailProps {
   text: string;
 }
 
-export const sendMail = ({ email, subject, text }: MailProps) => {
+export const sendMail = async ({ email, subject, text }: MailProps) => {
   const transporter = nodemailer.createTransport({
     host: process.env.HOST,
     port: Number(process.env.EMAIL_PORT),
@@ -24,7 +24,7 @@ export const sendMail = ({ email, subject, text }: MailProps) => {
     text,
   };
 
-  transporter.sendMail(mailOptions, function (error: any, info: any) {
+  await transporter.sendMail(mailOptions, function (error: any, info: any) {
     if (error) {
       console.log(error);
     } else {

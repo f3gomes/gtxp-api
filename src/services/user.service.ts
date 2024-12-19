@@ -44,10 +44,29 @@ const getUsersList = async (): Promise<Object> => {
   return usersList;
 };
 
+const verifyUserEmail = async (id: string): Promise<String | undefined> => {
+  const user = await prisma.user.findUnique({ where: { id } });
+
+  if (user) {
+    await prisma.user.update({
+      where: {
+        email: user.email,
+      },
+
+      data: {
+        verified: true,
+      },
+    });
+
+    return user.email;
+  }
+};
+
 export default {
   createUser,
   getUsersList,
   findUserByEmail,
   comparePasswords,
   generateToken,
+  verifyUserEmail,
 };

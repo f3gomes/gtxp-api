@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "@prisma/client";
+import { sendMail } from "../utils/send.email";
 import userService from "../services/user.service";
 
 const login = async (req: Request, res: Response): Promise<any> => {
@@ -9,7 +10,7 @@ const login = async (req: Request, res: Response): Promise<any> => {
     const user = await userService.findUserByEmail(email);
 
     if (!user) {
-      return res.status(401).json({ message: "Usuário não encontrado" });
+      return res.status(401).json({ message: "usuário não encontrado" });
     }
 
     const isPasswordMatch = await userService.comparePasswords(
@@ -18,7 +19,7 @@ const login = async (req: Request, res: Response): Promise<any> => {
     );
 
     if (!isPasswordMatch) {
-      return res.status(401).json({ message: "Senha incorreta" });
+      return res.status(401).json({ message: "senha incorreta" });
     }
 
     const token = await userService.generateToken(user);
@@ -32,8 +33,17 @@ const login = async (req: Request, res: Response): Promise<any> => {
 const postUser = async (req: Request, res: Response): Promise<User | any> => {
   try {
     const user = await userService.createUser(req.body);
+    const url = `${process.env.BASE_URL}/api/user/verify/${user.id}`;
 
-    return res.status(201).json({ user });
+    await sendMail({
+      email: user?.email,
+      subject: "Verifique seu e-mail",
+      text: url,
+    });
+
+    delete user.password;
+
+    return res.status(201).json({ verify: url, user });
   } catch (error: any) {
     const errorMessages = error.message.split("\n");
     const lastErrorMessage = errorMessages[errorMessages.length - 1];
@@ -54,7 +64,24 @@ const getUsers = async (req: Request, res: Response): Promise<User[] | any> => {
   }
 };
 
+const patchUserEmail = async (
+  req: Request,
+  res: Response
+): Promise<Object | any> => {
+  const { id } = req.params;
+
+  try {
+    const userVerified = await userService.verifyUserEmail(id);
+
+    return res.status(200).json({ message: "e-mail verificado", userVerified });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+    console.log(error);
+  }
+};
+
 export default {
+  patchUserEmail,
   postUser,
   getUsers,
   login,
