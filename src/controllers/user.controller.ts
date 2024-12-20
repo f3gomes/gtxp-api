@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { User } from "@prisma/client";
 import { sendMail } from "../utils/send.email";
+import {
+  generateEmail,
+  confirmSuccessTemplate,
+} from "../templates/confirm.email";
 import userService from "../services/user.service";
 
 const login = async (req: Request, res: Response): Promise<any> => {
@@ -35,10 +39,12 @@ const postUser = async (req: Request, res: Response): Promise<User | any> => {
     const user = await userService.createUser(req.body);
     const url = `${process.env.BASE_URL}/api/user/verify/${user.id}`;
 
+    const html = generateEmail(user?.name, url);
+
     await sendMail({
       email: user?.email,
       subject: "Verifique seu e-mail",
-      text: url,
+      html,
     });
 
     delete user.password;
@@ -67,16 +73,19 @@ const getUsers = async (req: Request, res: Response): Promise<User[] | any> => {
   }
 };
 
-const patchUserEmail = async (
+const getVerifyUserEmail = async (
   req: Request,
   res: Response
 ): Promise<Object | any> => {
   const { id } = req.params;
 
   try {
-    const userVerified = await userService.verifyUserEmail(id);
+    await userService.verifyUserEmail(id);
 
-    return res.status(200).json({ message: "e-mail verificado", userVerified });
+    return res
+      .status(200)
+      .set("Content-Type", "text/html")
+      .send(confirmSuccessTemplate);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
     console.log(error);
@@ -84,7 +93,7 @@ const patchUserEmail = async (
 };
 
 export default {
-  patchUserEmail,
+  getVerifyUserEmail,
   postUser,
   getUsers,
   login,

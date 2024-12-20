@@ -8,5 +8,5 @@ export const userRouter = express.Router();
 
 userRouter.post("/user/new", validateData(userSchema), userController.postUser);
 userRouter.get("/user/list", middleware.auth, userController.getUsers);
-userRouter.get("/user/verify/:id", userController.patchUserEmail);
+userRouter.get("/user/verify/:id", userController.getVerifyUserEmail);
 userRouter.post("/login", userController.login);

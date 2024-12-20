@@ -3,10 +3,10 @@ import nodemailer from "nodemailer";
 interface MailProps {
   email: string;
   subject: string;
-  text: string;
+  html: any;
 }
 
-export const sendMail = async ({ email, subject, text }: MailProps) => {
+export const sendMail = async ({ email, subject, html }: MailProps) => {
   const transporter = nodemailer.createTransport({
     host: process.env.HOST,
     port: Number(process.env.EMAIL_PORT),
@@ -21,7 +21,7 @@ export const sendMail = async ({ email, subject, text }: MailProps) => {
     from: process.env.USER,
     to: email,
     subject,
-    text,
+    html,
   };
 
   await transporter.sendMail(mailOptions, function (error: any, info: any) {
