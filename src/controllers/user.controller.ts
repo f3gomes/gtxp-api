@@ -35,14 +35,16 @@ const login = async (req: Request, res: Response): Promise<any> => {
 };
 
 const postUser = async (req: Request, res: Response): Promise<User | any> => {
+  const { name, email } = req.body;
+
   try {
     const user = await userService.createUser(req.body);
     const url = `${process.env.BASE_URL}/api/user/verify/${user.id}`;
 
-    const html = generateEmail(user?.name, url);
+    const html = await generateEmail(name, url);
 
     await sendMail({
-      email: user?.email,
+      email,
       subject: "Verifique seu e-mail",
       html,
     });
