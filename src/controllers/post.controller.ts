@@ -20,8 +20,10 @@ const postController = async (
 };
 
 const getPosts = async (req: Request, res: Response): Promise<Post[] | any> => {
+  const { userId } = req.body;
+
   try {
-    const posts = await postService.getAllPosts();
+    const posts = await postService.getAllPosts(userId);
 
     return res.status(200).json({ posts });
   } catch (error: any) {
