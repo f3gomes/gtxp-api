@@ -92,7 +92,27 @@ const getVerifyUserEmail = async (
   }
 };
 
+const patchResetPassword = async (
+  req: Request,
+  res: Response
+): Promise<Object | any> => {
+  const { id } = req.params;
+  const { password } = req.body;
+
+  try {
+    const userUpdated = await userService.resetPassword(id, password);
+
+    return res
+      .status(200)
+      .json({ message: "senha alterada com sucesso", email: userUpdated });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+    console.log(error);
+  }
+};
+
 export default {
+  patchResetPassword,
   getVerifyUserEmail,
   postUser,
   getUsers,

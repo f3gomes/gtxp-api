@@ -6,7 +6,10 @@ import { validateData } from "../middlewares/validation";
 
 export const userRouter = express.Router();
 
+userRouter.post("/login", userController.login);
 userRouter.post("/user/new", validateData(userSchema), userController.postUser);
+
 userRouter.get("/user/list", middleware.auth, userController.getUsers);
 userRouter.get("/user/verify/:id", userController.getVerifyUserEmail);
-userRouter.post("/login", userController.login);
+
+userRouter.patch("/user/reset/:id", userController.patchResetPassword);

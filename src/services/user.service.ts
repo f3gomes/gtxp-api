@@ -14,7 +14,7 @@ const comparePasswords = async (password: string, hashedPassword: string) => {
   return await bcrypt.compare(password, hashedPassword);
 };
 
-const generateToken = (user: User) => {
+const generateToken = async (user: User) => {
   return jwt.sign({ userId: user.id }, secret, { expiresIn: "1d" });
 };
 
@@ -50,11 +50,32 @@ const verifyUserEmail = async (id: string): Promise<String | undefined> => {
   if (user) {
     await prisma.user.update({
       where: {
-        email: user.email,
+        id,
       },
 
       data: {
         verified: true,
+      },
+    });
+
+    return user.email;
+  }
+};
+
+const resetPassword = async (id: string, password: string) => {
+  const user = await prisma.user.findUnique({ where: { id } });
+
+  const salt = await bcrypt.genSalt();
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  if (user) {
+    await prisma.user.update({
+      where: {
+        id,
+      },
+
+      data: {
+        password: hashedPassword,
       },
     });
 
@@ -69,4 +90,5 @@ export default {
   comparePasswords,
   generateToken,
   verifyUserEmail,
+  resetPassword,
 };
