@@ -42,14 +42,13 @@ const postUser = async (req: Request, res: Response): Promise<User | any> => {
     const url = `${process.env.BASE_URL}/api/user/verify/${user.id}`;
 
     const html = await generateEmail(name, url);
+    delete user.password;
 
     await sendMail({
       email,
       subject: "Verifique seu e-mail",
       html,
     });
-
-    delete user.password;
 
     return res.status(201).json({ verify: url, user });
   } catch (error: any) {
@@ -113,10 +112,26 @@ const patchResetPassword = async (
   }
 };
 
+const postMail = async (_req: Request, res: Response): Promise<any> => {
+  try {
+    const send = await sendMail({
+      email: "contato.felipeluna@gmail.com",
+      subject: "Verifique seu e-mail",
+      html: "<h1>Ola</>",
+    });
+
+    return res.status(200).json({ message: "sucesso", send });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+    console.log(error);
+  }
+};
+
 export default {
   patchResetPassword,
   getVerifyUserEmail,
   postUser,
   getUsers,
   login,
+  postMail,
 };
