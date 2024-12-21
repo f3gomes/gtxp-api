@@ -10,7 +10,7 @@ export const generateEmail = async (
     .replace("${confirmationLink}", confirmationLink);
 };
 
-export const confirmSuccessTemplate = `
+export const confirmTemplate = `
   <!DOCTYPE html>
   <html>
       <head>

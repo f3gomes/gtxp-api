@@ -1,11 +1,9 @@
-import { Request, Response } from "express";
-import { User } from "@prisma/client";
-import { sendMail } from "../utils/send.email";
-import {
-  generateEmail,
-  confirmSuccessTemplate,
-} from "../templates/confirm.email";
+import nodemailer from "nodemailer";
 import userService from "../services/user.service";
+
+import { User } from "@prisma/client";
+import { Request, Response } from "express";
+import { generateEmail, confirmTemplate } from "../templates/confirm.email";
 
 const login = async (req: Request, res: Response): Promise<any> => {
   const { email, password } = req.body;
@@ -44,10 +42,45 @@ const postUser = async (req: Request, res: Response): Promise<User | any> => {
     const html = await generateEmail(name, url);
     delete user.password;
 
-    await sendMail({
-      email,
+    const transporter = nodemailer.createTransport({
+      host: process.env.HOST,
+      port: Number(process.env.EMAIL_PORT),
+      secure: Boolean(process.env.SECURE),
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_KEY,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.USER,
+      to: email,
       subject: "Verifique seu e-mail",
       html,
+    };
+
+    await new Promise((resolve, reject) => {
+      transporter.verify((error, success) => {
+        if (error) {
+          console.log(error);
+          reject(error);
+        } else {
+          console.log("servidor está pronto");
+          resolve(success);
+        }
+      });
+    });
+
+    await new Promise((resolve, reject) => {
+      transporter.sendMail(mailOptions, (error: any, info: any) => {
+        if (error) {
+          console.log(error);
+          reject(error);
+        } else {
+          console.log("email enviado: " + info.response);
+          resolve(error);
+        }
+      });
     });
 
     return res.status(201).json({ verify: url, user });
@@ -86,7 +119,7 @@ const getVerifyUserEmail = async (
     return res
       .status(200)
       .set("Content-Type", "text/html")
-      .send(confirmSuccessTemplate);
+      .send(confirmTemplate);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
     console.log(error);
@@ -112,26 +145,10 @@ const patchResetPassword = async (
   }
 };
 
-const postMail = async (_req: Request, res: Response): Promise<any> => {
-  try {
-    const send = await sendMail({
-      email: "contato.felipeluna@gmail.com",
-      subject: "Verifique seu e-mail",
-      html: "<h1>Ola</>",
-    });
-
-    return res.status(200).json({ message: "sucesso", send });
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-    console.log(error);
-  }
-};
-
 export default {
   patchResetPassword,
   getVerifyUserEmail,
   postUser,
   getUsers,
   login,
-  postMail,
 };
