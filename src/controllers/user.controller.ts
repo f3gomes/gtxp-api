@@ -6,10 +6,10 @@ import { Request, Response } from "express";
 import { generateEmail, confirmTemplate } from "../templates/confirm.email";
 
 const login = async (req: Request, res: Response): Promise<any> => {
-  const { email, password } = req.body;
+  const { password } = req.body;
 
   try {
-    const user = await userService.findUserByEmail(email);
+    const user = await userService.findUserByEmail(req.body.email);
 
     if (!user) {
       return res.status(401).json({ message: "usuário não encontrado" });
@@ -25,7 +25,9 @@ const login = async (req: Request, res: Response): Promise<any> => {
     }
 
     const token = await userService.generateToken(user);
-    res.json({ token });
+    const { name, email, profileImgUrl } = user;
+
+    res.json({ name, email, profileImgUrl, token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error });

@@ -16,7 +16,7 @@ const auth = (req: any, res: any, next: NextFunction) => {
   try {
     jwt.verify(token, secret);
   } catch (error) {
-    return res.status(401).json({ message: "Invalid token" });
+    return res.status(401).json({ message: "Token inválido" });
   }
 
   return next();
