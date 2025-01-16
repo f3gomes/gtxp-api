@@ -12,7 +12,7 @@ const login = async (req: Request, res: Response): Promise<any> => {
     const user = await userService.findUserByEmail(req.body.email);
 
     if (!user) {
-      return res.status(401).json({ message: "usuário não encontrado" });
+      return res.status(401).json({ message: "Usuário não encontrado" });
     }
 
     const isPasswordMatch = await userService.comparePasswords(
@@ -21,7 +21,7 @@ const login = async (req: Request, res: Response): Promise<any> => {
     );
 
     if (!isPasswordMatch) {
-      return res.status(401).json({ message: "senha incorreta" });
+      return res.status(401).json({ message: "Senha incorreta" });
     }
 
     const token = await userService.generateToken(user);
@@ -140,7 +140,7 @@ const patchResetPassword = async (
 
     return res
       .status(200)
-      .json({ message: "senha alterada com sucesso", email: userUpdated });
+      .json({ message: "Senha alterada com sucesso", email: userUpdated });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
     console.log(error);

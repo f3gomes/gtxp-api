@@ -23,3 +23,11 @@ export const userSchema = z.object({
   visible: z.boolean(),
   type: z.enum(["SPEAKER", "CONGRESSMAN"]),
 });
+
+export const userSchemaResetPasword = z.object({
+  password: z
+    .string()
+    .min(8, {})
+    .regex(/[0-9]/, {})
+    .regex(/[a-zA-Z]/, {}),
+});
