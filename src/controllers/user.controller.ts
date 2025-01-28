@@ -24,13 +24,19 @@ const login = async (req: Request, res: Response): Promise<any> => {
       return res.status(401).json({ message: "Senha incorreta" });
     }
 
+    if (!user.verified) {
+      return res
+        .status(401)
+        .json({ message: "Confirme seu e-mail para entrar" });
+    }
+
     const token = await userService.generateToken(user);
     const { name, email, profileImgUrl } = user;
 
-    res.json({ name, email, profileImgUrl, token });
+    return res.json({ name, email, profileImgUrl, token });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    return res.status(500).json({ error });
   }
 };
 
