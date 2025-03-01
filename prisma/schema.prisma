@@ -36,6 +36,8 @@ model User {
   verified        Boolean     @default(false)
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+  resetToken      String?     @unique
+  expiresAt       DateTime?
 
   @@map("users")
 }

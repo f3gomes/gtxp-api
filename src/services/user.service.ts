@@ -62,25 +62,70 @@ const verifyUserEmail = async (id: string): Promise<String | undefined> => {
   }
 };
 
-const resetPassword = async (id: string, password: string) => {
-  const user = await prisma.user.findUnique({ where: { id } });
+const requestPasswordReset = async (email: string) => {
+  const user = await prisma.user.findUnique({ where: { email } });
+
+  if (!user) {
+    throw new Error("Usuário não encontrado");
+  }
+
+  try {
+    const secret = process.env.JWT_SECRET + user.password;
+    const token = jwt.sign({ userId: user.id }, secret, { expiresIn: "1h" });
+
+    if (user) {
+      await prisma.user.update({
+        where: {
+          email,
+        },
+
+        data: {
+          resetToken: token,
+        },
+      });
+    }
+
+    return token;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const resetPassword = async (token: string, newPassword: string) => {
+  let decoded;
+
+  try {
+    decoded = jwt.decode(token) as { userId: string };
+    if (!decoded) {
+      throw new Error("Token inválido");
+    }
+  } catch {
+    throw new Error("Token inválido");
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
+
+  if (!user) {
+    throw new Error("Usuário não encontrado");
+  }
+
+  const secret = process.env.JWT_SECRET + user.password;
+
+  try {
+    jwt.verify(token, secret);
+  } catch {
+    throw new Error("Token expirado ou inválido");
+  }
 
   const salt = await bcrypt.genSalt();
-  const hashedPassword = await bcrypt.hash(password, salt);
+  const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-  if (user) {
-    await prisma.user.update({
-      where: {
-        id,
-      },
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { password: hashedPassword },
+  });
 
-      data: {
-        password: hashedPassword,
-      },
-    });
-
-    return user.email;
-  }
+  return "Senha redefinida com sucesso!";
 };
 
 export default {
@@ -90,5 +135,6 @@ export default {
   comparePasswords,
   generateToken,
   verifyUserEmail,
+  requestPasswordReset,
   resetPassword,
 };

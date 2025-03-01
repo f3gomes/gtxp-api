@@ -13,6 +13,11 @@ userRouter.get("/user/list", middleware.auth, userController.getUsers);
 userRouter.get("/user/verify/:id", userController.getVerifyUserEmail);
 
 userRouter.patch(
+  "/user/reset/request",
+  userController.patchRequestResetPassword
+);
+
+userRouter.patch(
   "/user/reset/:id",
   validateData(userSchemaResetPasword),
   userController.patchResetPassword
