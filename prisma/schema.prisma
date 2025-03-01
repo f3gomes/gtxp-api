@@ -71,6 +71,6 @@ model Post {
 
 
 enum UserType {
-  CONRESSMAN 
+  CONGRESSMAN
   SPEAKER
 }
