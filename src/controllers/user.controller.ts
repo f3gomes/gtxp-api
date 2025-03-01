@@ -49,7 +49,7 @@ const postUser = async (req: Request, res: Response): Promise<User | any> => {
 
   try {
     const user = await userService.createUser(req.body);
-    const url = `${process.env.BASE_URL}/api/user/verify/${user.id}`;
+    const url = `${process.env.BASE_URL_API}/api/user/verify/${user.id}`;
 
     const html = await generateEmail(name, url);
     delete user.password;
