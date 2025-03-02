@@ -10,11 +10,11 @@ import {
   generateEmailResetPassword,
 } from "../templates/confirm.email";
 
-const getUserByEmail = async (req: Request, res: Response): Promise<any> => {
-  const { email } = req.body;
+const getUserById = async (req: Request, res: Response): Promise<any> => {
+  const { id } = req.params;
 
   try {
-    const user = await userService.findUserByEmail(email);
+    const user = await userService.findUserById(id);
 
     if (!user) {
       return res.status(401).json({ message: "Usuário não encontrado" });
@@ -245,7 +245,7 @@ export default {
   patchRequestResetPassword,
   patchResetPassword,
   getVerifyUserEmail,
-  getUserByEmail,
+  getUserById,
   postUser,
   getUsers,
   login,

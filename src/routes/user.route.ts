@@ -11,7 +11,7 @@ userRouter.post("/user/new", validateData(userSchema), userController.postUser);
 
 userRouter.get("/user/list", middleware.auth, userController.getUsers);
 userRouter.get("/user/verify/:id", userController.getVerifyUserEmail);
-userRouter.get("/user/find", userController.getUserByEmail);
+userRouter.get("/user/:id", userController.getUserById);
 
 userRouter.patch(
   "/user/reset/request",

@@ -10,6 +10,10 @@ const findUserByEmail = async (email: string) => {
   return await prisma.user.findUnique({ where: { email } });
 };
 
+const findUserById = async (id: string) => {
+  return await prisma.user.findUnique({ where: { id } });
+};
+
 const comparePasswords = async (password: string, hashedPassword: string) => {
   return await bcrypt.compare(password, hashedPassword);
 };
@@ -130,11 +134,12 @@ const resetPassword = async (token: string, newPassword: string) => {
 
 export default {
   createUser,
+  findUserById,
   getUsersList,
-  findUserByEmail,
-  comparePasswords,
-  generateToken,
-  verifyUserEmail,
-  requestPasswordReset,
   resetPassword,
+  generateToken,
+  findUserByEmail,
+  verifyUserEmail,
+  comparePasswords,
+  requestPasswordReset,
 };
