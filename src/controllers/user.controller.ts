@@ -151,8 +151,6 @@ const patchRequestResetPassword = async (
     const url = `${process.env.BASE_URL_APP}/reset/${user?.id}`;
 
     const html = await generateEmailResetPassword(user?.name as string, url);
-    console.log(user?.name);
-    console.log(url);
 
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
