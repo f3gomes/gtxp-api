@@ -1,13 +1,36 @@
 import nodemailer from "nodemailer";
-import userService from "../services/user.service";
+import { Request, Response } from "express";
 
 import { User } from "@prisma/client";
-import { Request, Response } from "express";
+
+import userService from "../services/user.service";
 import {
-  generateEmail,
   confirmTemplate,
+  generateEmail,
   generateEmailResetPassword,
 } from "../templates/confirm.email";
+
+const getUserByEmail = async (req: Request, res: Response): Promise<any> => {
+  const { email } = req.body;
+
+  try {
+    const user = await userService.findUserByEmail(email);
+
+    if (!user) {
+      return res.status(401).json({ message: "Usuário não encontrado" });
+    }
+
+    const { password, ...rest } = user;
+    const updatedUser = rest;
+
+    return res.status(200).json({ updatedUser });
+  } catch (error: any) {
+    const errorMessages = error.message.split("\n");
+    const lastErrorMessage = errorMessages[errorMessages.length - 1];
+
+    return res.status(500).json({ error: lastErrorMessage });
+  }
+};
 
 const login = async (req: Request, res: Response): Promise<any> => {
   const { password } = req.body;
@@ -222,6 +245,7 @@ export default {
   patchRequestResetPassword,
   patchResetPassword,
   getVerifyUserEmail,
+  getUserByEmail,
   postUser,
   getUsers,
   login,
