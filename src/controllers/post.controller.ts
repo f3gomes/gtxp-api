@@ -30,7 +30,24 @@ const getPosts = async (req: Request, res: Response): Promise<Post[] | any> => {
   }
 };
 
+const getPostsByEmail = async (
+  req: Request,
+  res: Response
+): Promise<Post[] | any> => {
+  const { email } = req.body;
+
+  try {
+    const posts = await postService.getPostByEmail(email);
+
+    return res.status(200).json({ posts });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+    console.log(error);
+  }
+};
+
 export default {
-  postController,
   getPosts,
+  postController,
+  getPostsByEmail,
 };

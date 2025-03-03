@@ -36,7 +36,18 @@ const getAllPosts = async (): Promise<Post[]> => {
   return posts;
 };
 
+const getPostByEmail = async (email: string): Promise<Post[]> => {
+  const posts = await prisma.post.findMany({
+    where: {
+      email,
+    },
+  });
+
+  return posts;
+};
+
 export default {
   createPost,
   getAllPosts,
+  getPostByEmail,
 };

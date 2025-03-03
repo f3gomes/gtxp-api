@@ -7,6 +7,12 @@ import { validateData } from "../middlewares/validation";
 export const postRouter = express.Router();
 
 postRouter.get("/posts/list", middleware.auth, postController.getPosts);
+postRouter.get(
+  "/posts/list/email",
+  middleware.auth,
+  postController.getPostsByEmail
+);
+
 postRouter.post(
   "/posts/new",
   middleware.auth,
