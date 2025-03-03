@@ -17,7 +17,7 @@ const createAppointment = async (data: Appointment): Promise<any> => {
       limit: data.limit,
       date: data.date,
       user: {
-        connect: { id: data.userId },
+        connect: { id: user?.id },
       },
     },
   });

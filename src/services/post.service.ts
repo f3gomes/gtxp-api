@@ -23,7 +23,7 @@ const createPost = async (data: Post): Promise<Post> => {
       message: data.message,
       imgUrl: data.imgUrl,
       user: {
-        connect: { id: user.id },
+        connect: { id: user?.id },
       },
     },
   });

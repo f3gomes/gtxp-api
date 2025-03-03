@@ -64,7 +64,6 @@ model Post {
   email           String
   message         String
   imgUrl          String?
-  tags            String[]
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 
