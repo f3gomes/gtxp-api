@@ -30,19 +30,7 @@ const createPost = async (data: Post): Promise<Post> => {
   return post;
 };
 
-const getAllPosts = async (userId: string): Promise<Post[]> => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-  });
-
-  if (!user) {
-    throw new Error("usuário não encontrado");
-  }
-
-  if (!user?.verified) {
-    throw new Error("e-mail não verificado");
-  }
-
+const getAllPosts = async (): Promise<Post[]> => {
   const posts = await prisma.post.findMany();
 
   return posts;
