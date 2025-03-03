@@ -18,11 +18,12 @@ const createPost = async (data: Post): Promise<Post> => {
 
   const post = await prisma.post.create({
     data: {
+      name: data.name,
+      email: data.email,
       message: data.message,
       imgUrl: data.imgUrl,
-      tags: data.tags,
       user: {
-        connect: { id: data.userId },
+        connect: { id: user.id },
       },
     },
   });
