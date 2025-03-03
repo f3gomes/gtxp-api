@@ -1,11 +1,10 @@
-import { Post } from "@prisma/client";
-import { PrismaClient } from "@prisma/client";
+import { Post, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const createPost = async (data: Post): Promise<Post> => {
+const createPost = async (data: Post): Promise<any> => {
   const user = await prisma.user.findUnique({
-    where: { id: data.userId, visible: true },
+    where: { email: data.email, visible: true },
   });
 
   if (!user) {
