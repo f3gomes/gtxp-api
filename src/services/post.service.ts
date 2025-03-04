@@ -19,6 +19,7 @@ const createPost = async (data: Post): Promise<any> => {
     data: {
       name: data.name,
       email: data.email,
+      profileImg: user.profileImgUrl,
       message: data.message,
       imgUrl: data.imgUrl,
       user: {
