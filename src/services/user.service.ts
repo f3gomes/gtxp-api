@@ -38,8 +38,10 @@ const createUser = async (data: User): Promise<any> => {
   return prisma.user.create({ data: updatedData });
 };
 
-const updateUser = async (id: string, data: User): Promise<any> => {
-  const user = findUserById(id);
+const updateUser = async (data: User): Promise<any> => {
+  const { email } = data;
+
+  const user = findUserByEmail(email);
 
   if (!user) {
     throw new Error("Usuário não encontrado");
@@ -48,7 +50,7 @@ const updateUser = async (id: string, data: User): Promise<any> => {
   if (user) {
     await prisma.user.update({
       where: {
-        id,
+        email,
       },
 
       data,

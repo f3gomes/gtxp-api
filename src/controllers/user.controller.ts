@@ -130,10 +130,11 @@ const postUser = async (req: Request, res: Response): Promise<User | any> => {
 
 const patchUser = async (req: Request, res: Response): Promise<User | any> => {
   const { email, password } = req.body;
-  const { id } = req.params;
 
-  if (email) {
-    return res.status(401).json({ message: "Email não pode ser alterado" });
+  if (!email) {
+    return res
+      .status(401)
+      .json({ message: "Informe o e-mail para atualizar os dados" });
   }
 
   if (password) {
@@ -141,7 +142,7 @@ const patchUser = async (req: Request, res: Response): Promise<User | any> => {
   }
 
   try {
-    const user = await userService.updateUser(id, req.body);
+    const user = await userService.updateUser(req.body);
     delete user.password;
 
     return res.status(200).json({ user });

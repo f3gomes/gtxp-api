@@ -13,7 +13,7 @@ userRouter.get("/user/list", middleware.auth, userController.getUsers);
 userRouter.get("/user/verify/:id", userController.getVerifyUserEmail);
 userRouter.get("/user/:id", userController.getUserById);
 
-userRouter.patch("/user/edit/:id", middleware.auth, userController.patchUser);
+userRouter.patch("/user/edit", middleware.auth, userController.patchUser);
 userRouter.patch(
   "/user/reset/request",
   userController.patchRequestResetPassword
