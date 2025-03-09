@@ -38,6 +38,26 @@ const createUser = async (data: User): Promise<any> => {
   return prisma.user.create({ data: updatedData });
 };
 
+const updateUser = async (id: string, data: User): Promise<any> => {
+  const user = findUserById(id);
+
+  if (!user) {
+    throw new Error("Usuário não encontrado");
+  }
+
+  if (user) {
+    await prisma.user.update({
+      where: {
+        id,
+      },
+
+      data,
+    });
+
+    return user;
+  }
+};
+
 const getUsersList = async (): Promise<Object> => {
   const users = await prisma.user.findMany({ where: { visible: true } });
 
@@ -134,6 +154,7 @@ const resetPassword = async (token: string, newPassword: string) => {
 
 export default {
   createUser,
+  updateUser,
   findUserById,
   getUsersList,
   resetPassword,

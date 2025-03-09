@@ -112,13 +112,39 @@ const postUser = async (req: Request, res: Response): Promise<User | any> => {
           console.log(error);
           reject(error);
         } else {
-          console.log("email enviado: " + info.response);
+          console.log("Email enviado: " + info.response);
           resolve(error);
         }
       });
     });
 
     return res.status(201).json({ verify: url, user });
+  } catch (error: any) {
+    const errorMessages = error.message.split("\n");
+    const lastErrorMessage = errorMessages[errorMessages.length - 1];
+
+    res.status(500).json({ error: lastErrorMessage });
+    console.log(error);
+  }
+};
+
+const patchUser = async (req: Request, res: Response): Promise<User | any> => {
+  const { email, password } = req.body;
+  const { id } = req.params;
+
+  if (email) {
+    return res.status(401).json({ message: "Email não pode ser alterado" });
+  }
+
+  if (password) {
+    return res.status(401).json({ message: "Senha não pode ser alterada" });
+  }
+
+  try {
+    const user = await userService.updateUser(id, req.body);
+    delete user.password;
+
+    return res.status(200).json({ user });
   } catch (error: any) {
     const errorMessages = error.message.split("\n");
     const lastErrorMessage = errorMessages[errorMessages.length - 1];
@@ -246,6 +272,7 @@ export default {
   patchResetPassword,
   getVerifyUserEmail,
   getUserById,
+  patchUser,
   postUser,
   getUsers,
   login,
