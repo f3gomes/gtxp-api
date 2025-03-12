@@ -32,6 +32,7 @@ model User {
   visible         Boolean
   type            UserType
   posts           Post[]
+  feedbacks       Feedback[]
   appointments    Appointment[]
   verified        Boolean     @default(false)
   createdAt       DateTime    @default(now())
@@ -75,4 +76,17 @@ model Post {
 enum UserType {
   CONGRESSMAN
   SPEAKER
+}
+
+model Feedback {
+  id              String      @id @default(uuid())
+  user            User        @relation(fields: [userId], references: [id])
+  userId          String
+  name            String
+  email           String
+  message         String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@map("feedbacks")
 }
