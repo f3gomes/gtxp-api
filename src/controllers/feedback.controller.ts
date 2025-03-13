@@ -1,11 +1,7 @@
 import { Request, Response } from "express";
-import { Feedback } from "@prisma/client";
 import feedbackService from "../services/feedback.service";
 
-const postFeedback = async (
-  req: Request,
-  res: Response
-): Promise<Feedback | any> => {
+const postFeedback = async (req: Request, res: Response): Promise<any> => {
   try {
     const feedback = await feedbackService.createFeedback(req.body);
 
@@ -22,7 +18,7 @@ const postFeedback = async (
 const getFeedbackByEmail = async (
   req: Request,
   res: Response
-): Promise<Feedback[] | any> => {
+): Promise<any> => {
   const { email } = req.body;
 
   try {
@@ -35,10 +31,7 @@ const getFeedbackByEmail = async (
   }
 };
 
-const getFeedbacks = async (
-  req: Request,
-  res: Response
-): Promise<Feedback[] | any> => {
+const getFeedbacks = async (req: Request, res: Response): Promise<any> => {
   try {
     const feedbacks = await feedbackService.getAllFeedbacks();
 

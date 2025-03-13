@@ -1,8 +1,8 @@
-import { Feedback, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const createFeedback = async (data: Feedback): Promise<any> => {
+const createFeedback = async (data: any): Promise<any> => {
   const user = await prisma.user.findUnique({
     where: { email: data.email, visible: true },
   });
@@ -29,7 +29,7 @@ const createFeedback = async (data: Feedback): Promise<any> => {
   return feedback;
 };
 
-const getFeedbackByEmail = async (email: string): Promise<Feedback[]> => {
+const getFeedbackByEmail = async (email: string): Promise<any[]> => {
   const feedbacks = await prisma.feedback.findMany({
     where: {
       email,
@@ -39,7 +39,7 @@ const getFeedbackByEmail = async (email: string): Promise<Feedback[]> => {
   return feedbacks;
 };
 
-const getAllFeedbacks = async (): Promise<Feedback[]> => {
+const getAllFeedbacks = async (): Promise<any[]> => {
   const feedbacks = await prisma.feedback.findMany();
 
   return feedbacks;
