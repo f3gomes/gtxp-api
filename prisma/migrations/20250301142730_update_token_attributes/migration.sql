@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "users" ALTER COLUMN "expiresAt" DROP NOT NULL,
-ALTER COLUMN "resetToken" DROP NOT NULL;

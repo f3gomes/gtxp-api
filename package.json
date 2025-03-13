@@ -7,7 +7,7 @@
     "dev": "ts-node-dev src/app.ts",
     "start": "ts-node-dev src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "vercel-build": "tsc && npx prisma migrate deploy"
+    "vercel-build": "tsc && npx prisma migrate reset --force && prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
